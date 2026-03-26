@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>【数科-人本】数智化协同及AI应用考评分析报告 · 总部 · 2025年1月</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --primary-mid: #93c5fd;
+    --secondary: #7c3aed;
+    --accent: #0ea5e9;
+    --success: #16a34a;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --bg: #f0f7ff;
+    --card-bg: #ffffff;
+    --border: #dbeafe;
+    --text: #1e3a5f;
+    --text-muted: #64748b;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(37,99,235,0.08);
+    --shadow-lg: 0 8px 32px rgba(37,99,235,0.13);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .header {
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 40%, #0ea5e9 100%);
+    color: white;
+    padding: 40px 0 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -40px;
+    width: 250px; height: 250px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .header h1 { font-size: 26px; font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
+  .header p { font-size: 14px; opacity: 0.85; }
+  .header .badge-row { margin-top: 16px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+  .header .badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 4px 14px; font-size: 12px; }
+  
+  .nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(37,99,235,0.06);
+  }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; gap: 0; overflow-x: auto; }
+  .nav-item {
+    padding: 14px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav-item:hover, .nav-item.active { color: var(--primary); border-bottom-color: var(--primary); }
+  
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
+  
+  .section { margin-bottom: 40px; }
+  .section-title {
+    font-size: 20px; font-weight: 700; color: var(--text);
+    margin-bottom: 20px;
+    padding-left: 14px;
+    border-left: 4px solid var(--primary);
+    display: flex; align-items: center; gap: 8px;
+  }
+  
+  /* 总览卡片 */
+  .overview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .stat-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .stat-card .icon { font-size: 28px; margin-bottom: 8px; }
+  .stat-card .val { font-size: 32px; font-weight: 800; color: var(--primary); line-height: 1; }
+  .stat-card .sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .stat-card .label { font-size: 13px; font-weight: 600; margin-top: 6px; }
+  .stat-card.green .val { color: var(--success); }
+  .stat-card.orange .val { color: var(--warning); }
+  .stat-card.purple .val { color: var(--secondary); }
+  
+  /* 双列布局 */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+  
+  /* 卡片容器 */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .card-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
+  
+  /* 图表区域 */
+  .chart-wrap { position: relative; height: 280px; }
+  .chart-wrap-tall { position: relative; height: 380px; }
+  
+  /* 四级部门卡片 */
+  .dept-level4-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .dept4-header {
+    display: flex;
+    align-items: center;
+    padding: 18px 20px;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--primary-light), #e0f2fe);
+    transition: background 0.2s;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .dept4-header:hover { background: linear-gradient(135deg, #dbeafe, #bae6fd); }
+  .dept4-title { display: flex; align-items: center; gap: 10px; }
+  .dept4-icon { font-size: 22px; }
+  .dept4-title h3 { font-size: 17px; font-weight: 700; color: var(--primary); }
+  .dept4-summary { display: flex; gap: 16px; flex-wrap: wrap; margin-left: auto; }
+  .summary-item { text-align: center; }
+  .s-label { font-size: 11px; color: var(--text-muted); display: block; }
+  .s-val { font-size: 16px; font-weight: 700; color: var(--text); }
+  .s-val.highlight { color: var(--primary); font-size: 20px; }
+  .dept4-toggle { font-size: 18px; color: var(--primary); transition: transform 0.3s; margin-left: 8px; }
+  
+  /* 五级部门 */
+  .dept-level5 {
+    border-top: 1px solid var(--border);
+    background: #fafcff;
+  }
+  .dept5-header {
+    display: flex; align-items: center;
+    padding: 14px 24px;
+    cursor: pointer;
+    transition: background 0.2s;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .dept5-header:hover { background: var(--primary-light); }
+  .dept5-title { display: flex; align-items: center; gap: 8px; }
+  .dept5-icon { font-size: 17px; }
+  .dept5-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .dept5-drill-tag {
+    background: #ede9fe; color: #7c3aed;
+    font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+  }
+  .dept5-stats { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+  .stat-chip {
+    background: #f1f5f9; color: var(--text-muted);
+    font-size: 12px; padding: 3px 10px; border-radius: 12px;
+  }
+  .avg-chip { background: #dbeafe; color: var(--primary); }
+  .full-chip { background: #dcfce7; color: var(--success); }
+  .toggle-icon { font-size: 14px; color: var(--text-muted); transition: transform 0.3s; margin-left: 4px; }
+  .toggle-icon.rotated { transform: rotate(180deg); }
+  
+  /* 六级部门 */
+  .sub-dept-card {
+    margin: 8px 24px 8px 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: white;
+    overflow: hidden;
+  }
+  .sub-dept-header {
+    display: flex; align-items: center;
+    padding: 10px 16px;
+    cursor: pointer;
+    background: #f8faff;
+    transition: background 0.2s;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .sub-dept-header:hover { background: var(--primary-light); }
+  .sub-dept-icon { font-size: 14px; }
+  .sub-dept-name { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+  .sub-dept-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+  .meta-badge { background: #f1f5f9; color: var(--text-muted); font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+  .avg-badge { background: #dbeafe; color: var(--primary); }
+  
+  /* 折叠内容 */
+  .collapse-content { display: none; }
+  .collapse-content.open { display: block; }
+  
+  /* 数据表格 */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 0;
+  }
+  .data-table thead tr {
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    color: white;
+  }
+  .data-table thead th {
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .data-table tbody tr { border-bottom: 1px solid #f0f4ff; transition: background 0.15s; }
+  .data-table tbody tr:hover { background: #eff6ff; }
+  .data-table tbody td { padding: 9px 12px; }
+  .rank-num { color: var(--text-muted); font-weight: 600; width: 36px; }
+  .name-cell { font-weight: 600; }
+  
+  /* 分数样式 */
+  .score-full { color: var(--success); font-weight: 800; font-size: 14px; }
+  .score-zero { color: var(--danger); font-weight: 700; }
+  .score-mid { color: var(--warning); font-weight: 600; }
+  .match-score { background: #dbeafe; color: var(--primary); padding: 2px 8px; border-radius: 8px; font-weight: 600; font-size: 12px; }
+  
+  .badge-green { background: #dcfce7; color: var(--success); padding: 2px 8px; border-radius: 8px; font-size: 12px; }
+  .badge-red { background: #fee2e2; color: var(--danger); padding: 2px 8px; border-radius: 8px; font-size: 12px; }
+  
+  /* 排名表 */
+  .rank-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .rank-table thead tr { background: #1d4ed8; color: white; }
+  .rank-table thead th { padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 600; }
+  .rank-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .rank-table tbody tr:hover { background: var(--primary-light); }
+  .rank-table tbody td { padding: 10px 14px; }
+  .rank-medal { font-size: 18px; width: 40px; }
+  .l4-tag { background: #e0f2fe; color: #0369a1; font-size: 10px; padding: 1px 6px; border-radius: 8px; margin-right: 4px; }
+  .avg-num { font-weight: 800; color: var(--primary); font-size: 15px; }
+  .progress-bar { background: #e2e8f0; border-radius: 6px; height: 8px; min-width: 120px; }
+  .progress-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+  
+  /* 洞察卡片 */
+  .insight-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .insight-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--primary);
+  }
+  .insight-card.warning { border-left-color: var(--warning); }
+  .insight-card.success { border-left-color: var(--success); }
+  .insight-card.purple { border-left-color: var(--secondary); }
+  .insight-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .insight-card p { font-size: 13px; color: var(--text-muted); line-height: 1.7; }
+  .insight-card ul { margin-left: 16px; }
+  .insight-card li { font-size: 13px; color: var(--text-muted); line-height: 1.8; }
+  
+  /* 指标说明 */
+  .rule-box {
+    background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .rule-box strong { color: var(--text); }
+  
+  /* 四级对比 */
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+  .compare-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary); }
+  .compare-stat { display: flex; justify-content: space-around; gap: 8px; flex-wrap: wrap; }
+  .compare-stat-item { text-align: center; }
+  .compare-stat-item .cv { font-size: 24px; font-weight: 800; color: var(--primary); }
+  .compare-stat-item .cl { font-size: 11px; color: var(--text-muted); }
+  
+  /* Tab切换 */
+  .tab-wrap { margin-bottom: 16px; }
+  .tab-btns { display: flex; gap: 0; background: #e2e8f0; border-radius: 8px; padding: 3px; width: fit-content; }
+  .tab-btn {
+    padding: 8px 20px; font-size: 13px; font-weight: 600;
+    border: none; background: none; cursor: pointer; border-radius: 6px;
+    color: var(--text-muted); transition: all 0.2s;
+  }
+  .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  
+  .footer { text-align: center; padding: 32px 0; color: var(--text-muted); font-size: 12px; background: white; border-top: 1px solid var(--border); margin-top: 40px; }
+  
+  /* 全展开/收起按钮 */
+  .toggle-all-btn {
+    background: var(--primary); color: white;
+    border: none; border-radius: 8px; padding: 8px 18px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    transition: background 0.2s; margin-bottom: 16px;
+  }
+  .toggle-all-btn:hover { background: #1d4ed8; }
+  
+  /* 高亮行 */
+  .top-score td { background: #f0fdf4 !important; }
+  .zero-score td { background: #fff7f7 !important; }
+  
+  /* 响应式 */
+  @media (max-width: 600px) {
+    .dept4-summary { gap: 8px; }
+    .header h1 { font-size: 18px; }
+    .two-col { grid-template-columns: 1fr; }
+    .overview-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- 页眉 -->
+<div class="header">
+  <h1>🏢 数智化协同及AI应用考评分析报告</h1>
+  <p>总部 · 2025年1月 · 数科-人本出品</p>
+  <div class="badge-row">
+    <span class="badge">📊 参评人数 184 人</span>
+    <span class="badge">🤖 AI工具考核（满分7分）</span>
+    <span class="badge">📄 协同工具考核（满分13分）</span>
+    <span class="badge">🏛️ 两大四级部门</span>
+  </div>
+</div>
+
+<!-- 导航 -->
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-item active" onclick="scrollToSection('overview')">📋 总览</div>
+    <div class="nav-item" onclick="scrollToSection('ai-section')">🤖 AI工具考核</div>
+    <div class="nav-item" onclick="scrollToSection('syn-section')">📄 协同工具考核</div>
+    <div class="nav-item" onclick="scrollToSection('ranking')">🏆 排名</div>
+    <div class="nav-item" onclick="scrollToSection('insights')">💡 洞察与建议</div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ============ 一、总览 ============ -->
+<div class="section" id="overview">
+  <div class="section-title">📋 总览</div>
+  
+  <div class="overview-grid">
+    <div class="stat-card">
+      <div class="icon">👥</div>
+      <div class="val">184</div>
+      <div class="label">参评总人数</div>
+      <div class="sub">两个四级部门</div>
+    </div>
+    <div class="stat-card">
+      <div class="icon">🤖</div>
+      <div class="val">6.45</div>
+      <div class="label">AI工具考核均值</div>
+      <div class="sub">满分 7 分</div>
+    </div>
+    <div class="stat-card green">
+      <div class="icon">🏆</div>
+      <div class="val">166</div>
+      <div class="label">AI满分人数</div>
+      <div class="sub">占比 90.2%</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="icon">⚠️</div>
+      <div class="val">12</div>
+      <div class="label">AI零分人数</div>
+      <div class="sub">需重点关注</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="icon">📄</div>
+      <div class="val">11.52</div>
+      <div class="label">协同工具考核均值</div>
+      <div class="sub">满分 13 分</div>
+    </div>
+    <div class="stat-card green">
+      <div class="icon">⭐</div>
+      <div class="val">133</div>
+      <div class="label">协同高分(≥12)人数</div>
+      <div class="sub">占比 72.3%</div>
+    </div>
+    <div class="stat-card">
+      <div class="icon">💬</div>
+      <div class="val">166</div>
+      <div class="label">AI对话达标人数</div>
+      <div class="sub">≥6条，未达标 18 人</div>
+    </div>
+    <div class="stat-card green">
+      <div class="icon">📝</div>
+      <div class="val">159</div>
+      <div class="label">文档创建达标人数</div>
+      <div class="sub">≥3个文档，占比 86.4%</div>
+    </div>
+  </div>
+  
+  <!-- 四级部门对比 -->
+  <div style="margin-top: 24px;">
+    <div class="card-title">🏛️ 四级部门整体对比</div>
+    <div class="compare-grid">
+      <div class="compare-card">
+        <h4>🍽️ 餐饮群总部</h4>
+        <div class="compare-stat">
+          <div class="compare-stat-item"><div class="cv">119</div><div class="cl">参评人数</div></div>
+          <div class="compare-stat-item"><div class="cv" style="color:#2563eb">6.66</div><div class="cl">AI考核均值</div></div>
+          <div class="compare-stat-item"><div class="cv" style="color:#7c3aed">11.65</div><div class="cl">协同考核均值</div></div>
+          <div class="compare-stat-item"><div class="cv" style="color:#16a34a">111</div><div class="cl">AI满分人数</div></div>
+        </div>
+      </div>
+      <div class="compare-card">
+        <h4>🏢 大TQ总部</h4>
+        <div class="compare-stat">
+          <div class="compare-stat-item"><div class="cv">65</div><div class="cl">参评人数</div></div>
+          <div class="compare-stat-item"><div class="cv" style="color:#2563eb">6.05</div><div class="cl">AI考核均值</div></div>
+          <div class="compare-stat-item"><div class="cv" style="color:#7c3aed">11.26</div><div class="cl">协同考核均值</div></div>
+          <div class="compare-stat-item"><div class="cv" style="color:#16a34a">55</div><div class="cl">AI满分人数</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 总体图表 -->
+  <div class="two-col" style="margin-top:20px">
+    <div class="card">
+      <div class="card-title">🤖 AI工具考核 · 各五级部门均值排名</div>
+      <div class="chart-wrap-tall">
+        <canvas id="aiDeptChart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📄 协同工具考核 · 各五级部门均值排名</div>
+      <div class="chart-wrap-tall">
+        <canvas id="synDeptChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 二、AI工具使用考核 ============ -->
+<div class="section" id="ai-section">
+  <div class="section-title">🤖 AI工具使用考核分析（分部门）</div>
+  
+  <div class="rule-box">
+    <strong>📐 评分规则：</strong>① AI工具对话数量（3分）：月度对话数 ≥6条得3分，否则0分；
+    ② 工具使用质量与岗位匹配度（4分）：智能体评分≥3.2分→4分；3.0&lt;评分&lt;3.2→(实际/3.2)×4；≤3.0→0分。
+    <strong>满分7分。</strong>绿色=满分 · 橙色=中分 · 红色=零分 · ✅=对话数达标 · ❌=未达标
+  </div>
+  
+  <button class="toggle-all-btn" onclick="expandAll('ai')">📂 全部展开</button>
+  <button class="toggle-all-btn" style="background:#64748b;margin-left:8px" onclick="collapseAll('ai')">📁 全部收起</button>
+  
+  <div class="dept-level4-card">
+<div class="dept4-header" onclick="toggleSection('ai-l4-2323725561706937404')">
+<div class="dept4-title"><span class="dept4-icon">🏛️</span><h3>餐饮群总部</h3></div>
+<div class="dept4-summary">
+<div class="summary-item"><span class="s-label">👥 总人数</span><span class="s-val">119</span></div>
+<div class="summary-item"><span class="s-label">📊 部门均值</span><span class="s-val highlight">6.66</span></div>
+<div class="summary-item"><span class="s-label">🏆 满分人数</span><span class="s-val">111</span></div>
+<div class="summary-item"><span class="s-label">📈 均值达标率</span><span class="s-val">95.1%</span></div>
+</div>
+<span class="toggle-icon dept4-toggle" id="ai-l4-2323725561706937404-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l4-2323725561706937404"><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-8428033305250102737')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">数智科技中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 29人</span><span class="stat-chip avg-chip">均值 <strong>6.76</strong></span><span class="stat-chip full-chip">满分率 <strong>96.6%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-8428033305250102737-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-8428033305250102737"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 吴丹</td><td><span class="badge-green">✅ 20</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 丁昊</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 邱集锐</td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 赵园园</td><td><span class="badge-green">✅ 23</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 刘云霞</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 张雪冬</td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 张梅</td><td><span class="badge-green">✅ 22</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 于俊</td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 罗智隆</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 李晨浩</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 刘逸之</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 曾悦平</td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 郑木旺</td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 孙剑</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 厉诚才</td><td><span class="badge-green">✅ 23</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 顾天宇</td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">17</td><td class="name-cell">👤 张凯芸</td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">18</td><td class="name-cell">👤 杨浩</td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">19</td><td class="name-cell">👤 张晓丹</td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">20</td><td class="name-cell">👤 徐杨祯</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.9</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">21</td><td class="name-cell">👤 袁吉祥</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">22</td><td class="name-cell">👤 唐麒俊</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.9</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">23</td><td class="name-cell">👤 吴斌</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">24</td><td class="name-cell">👤 王韦</td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">25</td><td class="name-cell">👤 姚智捷</td><td><span class="badge-green">✅ 27</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">26</td><td class="name-cell">👤 杨光</td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">27</td><td class="name-cell">👤 王悦</td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">28</td><td class="name-cell">👤 王艳辉</td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">29</td><td class="name-cell">👤 沈学</td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-2170174207192864970')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">西式快餐事业本部</span><span class="dept5-drill-tag">📊 已下钻六级</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 51人</span><span class="stat-chip avg-chip">均值 <strong>6.61</strong></span><span class="stat-chip full-chip">满分率 <strong>92.2%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-2170174207192864970-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-2170174207192864970"><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-4467763763415496572')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐品牌行销部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 17人</span><span class="meta-badge avg-badge">均值 <strong>5.82</strong></span></div>
+<span class="toggle-icon" id="ai-l6-4467763763415496572-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-4467763763415496572"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 蒋冰倩</td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 郭晓菁</td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 杨杏平</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 王丽婷</td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 王婷</td><td><span class="badge-green">✅ 26</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 张思敏</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 方园</td><td><span class="badge-green">✅ 26</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 刘扬</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 施晨怡</td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 赵宏鑫</td><td><span class="badge-green">✅ 58</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 俞敏毓</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 王轶婷</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 屠璐丹</td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 徐心怡</td><td><span class="badge-red">❌ 5</span></td><td><span class="match-score">4.7</span></td><td class="score-mid">4</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 亚尔</td><td><span class="badge-red">❌ 5</span></td><td><span class="match-score">4.8</span></td><td class="score-mid">4</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 方丽堃</td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr>
+<tr><td class="rank-num">17</td><td class="name-cell">👤 钟鹤翎</td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-3467682184806628830')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐开发加盟拓展部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 7人</span><span class="meta-badge avg-badge">均值 <strong>7.0</strong></span></div>
+<span class="toggle-icon" id="ai-l6-3467682184806628830-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-3467682184806628830"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 潘明玥</td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 刘博宇</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 王煜云</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 杨建涛</td><td><span class="badge-green">✅ 20</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 姬文林</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 张伟</td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 李纯冬</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-4704997837154916817')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐本地生活运营部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 5人</span><span class="meta-badge avg-badge">均值 <strong>7.0</strong></span></div>
+<span class="toggle-icon" id="ai-l6-4704997837154916817-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-4704997837154916817"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 郑建鑫</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 孙欢</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 马颖涯</td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 张艳莉</td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 雷婷</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-5306878287131943504')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐用户运营部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 9人</span><span class="meta-badge avg-badge">均值 <strong>7.0</strong></span></div>
+<span class="toggle-icon" id="ai-l6-5306878287131943504-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-5306878287131943504"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 文宜南</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 邰浩宇</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 陈靖贻</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 黄梦婷</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 柳俊秀</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 和芳瑜</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 郭振男</td><td><span class="badge-green">✅ 23</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 姜星辰</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 贾夕尧</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-4726597959744811615')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐营运及训练部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 12人</span><span class="meta-badge avg-badge">均值 <strong>7.0</strong></span></div>
+<span class="toggle-icon" id="ai-l6-4726597959744811615-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-4726597959744811615"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 苏慧</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 胡镇</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 王寅</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 候小云</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 李晓波</td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 李沫</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 叶欣</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 范伟</td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 李江</td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 李楠</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 谢春雷</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 庞科</td><td><span class="badge-green">✅ 22</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-7400408766544896720')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">计算错误</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 1人</span><span class="meta-badge avg-badge">均值 <strong>7.0</strong></span></div>
+<span class="toggle-icon" id="ai-l6-7400408766544896720-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-7400408766544896720"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 李德伟</td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-5674461912076886515')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">研发中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 15人</span><span class="stat-chip avg-chip">均值 <strong>6.53</strong></span><span class="stat-chip full-chip">满分率 <strong>93.3%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-5674461912076886515-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-5674461912076886515"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 刘红莉</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 吴秋萍</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 田正良</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 汪诗新</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 陈己秀</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 戚晓峰</td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 刘陈</td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 韩治刚</td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 陈丽</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 吕韦辰</td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 黄红卫</td><td><span class="badge-green">✅ 23</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 张普明</td><td><span class="badge-green">✅ 100</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 董浩志</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 林桃</td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.2</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 陈文</td><td><span class="badge-red">❌ 1</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-7299263904335745332')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">业务洞察分析部</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 5人</span><span class="stat-chip avg-chip">均值 <strong>7.0</strong></span><span class="stat-chip full-chip">满分率 <strong>100.0%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-7299263904335745332-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-7299263904335745332"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 陈彦溪</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 丁菲</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 邱雅馨</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 朱俊杰</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 高晓妍</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.9</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-1847521193421646811')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">中式快餐事业本部</span><span class="dept5-drill-tag">📊 已下钻六级</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 17人</span><span class="stat-chip avg-chip">均值 <strong>6.82</strong></span><span class="stat-chip full-chip">满分率 <strong>94.1%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-1847521193421646811-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-1847521193421646811"><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-6890947558379954465')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">中式快餐品牌及用户运营部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 7人</span><span class="meta-badge avg-badge">均值 <strong>7.0</strong></span></div>
+<span class="toggle-icon" id="ai-l6-6890947558379954465-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-6890947558379954465"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 王馨</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 肖秋勇</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 张嘉懿</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 诸逸婧</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 康浩</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.9</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 黄雯薇</td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 徐俊</td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-2921069234984740078')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">中式快餐开发加盟拓展部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 2人</span><span class="meta-badge avg-badge">均值 <strong>7.0</strong></span></div>
+<span class="toggle-icon" id="ai-l6-2921069234984740078-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-2921069234984740078"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 李俊</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 陈圣杰</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-3250868104680666551')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">中式快餐营运推进及训练部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 6人</span><span class="meta-badge avg-badge">均值 <strong>6.5</strong></span></div>
+<span class="toggle-icon" id="ai-l6-3250868104680666551-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-3250868104680666551"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 范欢欢</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 刘勇</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 张昌荣</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 袁玉霞</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 王美琴</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 付奇</td><td><span class="badge-red">❌ 5</span></td><td><span class="match-score">4.7</span></td><td class="score-mid">4</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-7400408766544896720')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">计算错误</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 1人</span><span class="meta-badge avg-badge">均值 <strong>7.0</strong></span></div>
+<span class="toggle-icon" id="ai-l6-7400408766544896720-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-7400408766544896720"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 罗金林</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('ai-l6-excl-1847521193421646811')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">其他（无六级部门）</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 1人</span></div>
+<span class="toggle-icon" id="ai-l6-excl-1847521193421646811-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l6-excl-1847521193421646811"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 庞相勇</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-905582613404988010')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">总经办</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 2人</span><span class="stat-chip avg-chip">均值 <strong>5.5</strong></span><span class="stat-chip full-chip">满分率 <strong>50.0%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-905582613404988010-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-905582613404988010"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 钱骏</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 姚磊</td><td><span class="badge-red">❌ 4</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">4</td></tr></tbody></table></div>
+</div></div>
+</div>
+<div class="dept-level4-card">
+<div class="dept4-header" onclick="toggleSection('ai-l4-6004129846622937443')">
+<div class="dept4-title"><span class="dept4-icon">🏛️</span><h3>大TQ总部</h3></div>
+<div class="dept4-summary">
+<div class="summary-item"><span class="s-label">👥 总人数</span><span class="s-val">65</span></div>
+<div class="summary-item"><span class="s-label">📊 部门均值</span><span class="s-val highlight">6.05</span></div>
+<div class="summary-item"><span class="s-label">🏆 满分人数</span><span class="s-val">55</span></div>
+<div class="summary-item"><span class="s-label">📈 均值达标率</span><span class="s-val">86.4%</span></div>
+</div>
+<span class="toggle-icon dept4-toggle" id="ai-l4-6004129846622937443-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l4-6004129846622937443"><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-2115056398757874600')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ人力发展中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 16人</span><span class="stat-chip avg-chip">均值 <strong>7.0</strong></span><span class="stat-chip full-chip">满分率 <strong>100.0%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-2115056398757874600-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-2115056398757874600"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 张神杰</td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 莫启荣</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 戴佳炜</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 经珊</td><td><span class="badge-green">✅ 29</span></td><td><span class="match-score">4.9</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 金世杰</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 张墨琦</td><td><span class="badge-green">✅ 26</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 刘颖</td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 张林波</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 王影</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 杨颖蓉</td><td><span class="badge-green">✅ 26</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 黄健</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 陆磊</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 尤优</td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 王洁</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 孙嘉仪</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 高敏慈</td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-5056100354799762424')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ财务中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 24人</span><span class="stat-chip avg-chip">均值 <strong>5.12</strong></span><span class="stat-chip full-chip">满分率 <strong>70.8%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-5056100354799762424-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-5056100354799762424"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 程文静</td><td><span class="badge-green">✅ 17</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 邢艳辉</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 李龙</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 杨良奎</td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 易超</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 曹宜婧</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 刘洋</td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.3</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 潘翔</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 高程</td><td><span class="badge-green">✅ 24</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 郁欢</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.0</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 张佳燕</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 郁文佳</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 单海燕</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 王海花</td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 高宇</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 陈琳丽</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">17</td><td class="name-cell">👤 陈皖</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">18</td><td class="name-cell">👤 聂艳萍</td><td><span class="badge-red">❌ 5</span></td><td><span class="match-score">4.8</span></td><td class="score-mid">4</td></tr>
+<tr><td class="rank-num">19</td><td class="name-cell">👤 刘燕傧</td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr>
+<tr><td class="rank-num">20</td><td class="name-cell">👤 姜妍</td><td><span class="badge-red">❌ 2</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr>
+<tr><td class="rank-num">21</td><td class="name-cell">👤 卞枭</td><td><span class="badge-red">❌ 4</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr>
+<tr><td class="rank-num">22</td><td class="name-cell">👤 付宇佳</td><td><span class="badge-red">❌ 1</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr>
+<tr><td class="rank-num">23</td><td class="name-cell">👤 朱婉婷</td><td><span class="badge-red">❌ 0</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr>
+<tr><td class="rank-num">24</td><td class="name-cell">👤 施汉杰</td><td><span class="badge-red">❌ 2</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-2972189019545048086')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ食品安全中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 15人</span><span class="stat-chip avg-chip">均值 <strong>6.53</strong></span><span class="stat-chip full-chip">满分率 <strong>93.3%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-2972189019545048086-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-2972189019545048086"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 董路路</td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 王晴</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 龚旭</td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 沙云涛</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 杨欣</td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 卞海燕</td><td><span class="badge-green">✅ 17</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 仲菲</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 王昌宁</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 郭震</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 江居杰</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 郭建伟</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 侯万里</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 顾军</td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 邓云</td><td><span class="badge-green">✅ 27</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 花艳</td><td><span class="badge-red">❌ 4</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-8808170625959218420')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ执行长办公室</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 5人</span><span class="stat-chip avg-chip">均值 <strong>7.0</strong></span><span class="stat-chip full-chip">满分率 <strong>100.0%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-8808170625959218420-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-8808170625959218420"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 梁美玲</td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 刘星辰</td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 高耀</td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 熊淑梅</td><td><span class="badge-green">✅ 31</span></td><td><span class="match-score">4.7</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 崔凯军</td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-9078444222934704979')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ法务及合规部</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 4人</span><span class="stat-chip avg-chip">均值 <strong>4.5</strong></span><span class="stat-chip full-chip">满分率 <strong>50.0%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-9078444222934704979-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-9078444222934704979"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 赵丹</td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 丁成刚</td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">7</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 顾凯莉</td><td><span class="badge-red">❌ 5</span></td><td><span class="match-score">4.8</span></td><td class="score-mid">4</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 庄映虹</td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">1.5</span></td><td class="score-zero">0</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('ai-l5-447044493306944346')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ执董办公室</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 1人</span><span class="stat-chip avg-chip">均值 <strong>7.0</strong></span><span class="stat-chip full-chip">满分率 <strong>100.0%</strong></span></div>
+<span class="toggle-icon" id="ai-l5-447044493306944346-icon">▼</span>
+</div>
+<div class="collapse-content" id="ai-l5-447044493306944346"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>AI对话数量</th><th>工具匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 师晓磊</td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.8</span></td><td class="score-full">7</td></tr></tbody></table></div>
+</div></div>
+</div>
+</div>
+
+<!-- ============ 三、协同工具使用考核 ============ -->
+<div class="section" id="syn-section">
+  <div class="section-title">📄 协同工具使用考核分析（分部门）</div>
+  
+  <div class="rule-box">
+    <strong>📐 评分规则：</strong>① 在线协同文档创建数量（8分）：月度创建≥3个→3分；参与协同≥5个→5分；不达标均为0分。
+    ② 创建文档与岗位匹配度（5分）：按智能体1-5分实际得分计算。
+    <strong>满分13分。</strong>绿色=高分(≥12) · ✅=达标 · ❌=未达标
+  </div>
+  
+  <button class="toggle-all-btn" onclick="expandAll('syn')">📂 全部展开</button>
+  <button class="toggle-all-btn" style="background:#64748b;margin-left:8px" onclick="collapseAll('syn')">📁 全部收起</button>
+  
+  <div class="dept-level4-card">
+<div class="dept4-header" onclick="toggleSection('syn-l4-2323725561706937404')">
+<div class="dept4-title"><span class="dept4-icon">🏛️</span><h3>餐饮群总部</h3></div>
+<div class="dept4-summary">
+<div class="summary-item"><span class="s-label">👥 总人数</span><span class="s-val">121</span></div>
+<div class="summary-item"><span class="s-label">📊 部门均值</span><span class="s-val highlight">11.65</span></div>
+<div class="summary-item"><span class="s-label">🏆 高分(≥12)人数</span><span class="s-val">89</span></div>
+<div class="summary-item"><span class="s-label">📈 均值达标率</span><span class="s-val">89.6%</span></div>
+</div>
+<span class="toggle-icon dept4-toggle" id="syn-l4-2323725561706937404-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l4-2323725561706937404"><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-8428033305250102737')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">数智科技中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 30人</span><span class="stat-chip avg-chip">均值 <strong>12.22</strong></span><span class="stat-chip full-chip">高分率 <strong>90.0%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-8428033305250102737-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-8428033305250102737"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 吴丹</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 20</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 张凯芸</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 王艳辉</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 于俊</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 31</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 孙剑</td><td><span class="badge-green">✅ 12</span></td><td><span class="badge-green">✅ 22</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 厉诚才</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 31</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 顾天宇</td><td><span class="badge-green">✅ 31</span></td><td><span class="badge-green">✅ 32</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 郑木旺</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 姚智捷</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 20</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 杨光</td><td><span class="badge-green">✅ 10</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 唐麒俊</td><td><span class="badge-green">✅ 20</span></td><td><span class="badge-green">✅ 34</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 张晓丹</td><td><span class="badge-green">✅ 25</span></td><td><span class="badge-green">✅ 45</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 邱集锐</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 47</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 赵园园</td><td><span class="badge-green">✅ 12</span></td><td><span class="badge-green">✅ 35</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 刘云霞</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 张雪冬</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 23</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">17</td><td class="name-cell">👤 张梅</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 23</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">18</td><td class="name-cell">👤 吴斌</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">19</td><td class="name-cell">👤 罗智隆</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">20</td><td class="name-cell">👤 王韦</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">21</td><td class="name-cell">👤 杨浩</td><td><span class="badge-green">✅ 12</span></td><td><span class="badge-green">✅ 65</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">22</td><td class="name-cell">👤 袁吉祥</td><td><span class="badge-green">✅ 22</span></td><td><span class="badge-green">✅ 37</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">23</td><td class="name-cell">👤 沈学</td><td><span class="badge-green">✅ 10</span></td><td><span class="badge-green">✅ 29</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">24</td><td class="name-cell">👤 曾悦平</td><td><span class="badge-green">✅ 12</span></td><td><span class="badge-green">✅ 21</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">25</td><td class="name-cell">👤 刘逸之</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">26</td><td class="name-cell">👤 王悦</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 42</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">27</td><td class="name-cell">👤 魏梦铎</td><td><span class="badge-green">✅ 34</span></td><td><span class="badge-green">✅ 45</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">28</td><td class="name-cell">👤 徐杨祯</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">2.5</span></td><td class="score-mid">10.5</td></tr>
+<tr><td class="rank-num">29</td><td class="name-cell">👤 李晨浩</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 21</span></td><td><span class="match-score">4.0</span></td><td class="score-mid">9.0</td></tr>
+<tr><td class="rank-num">30</td><td class="name-cell">👤 丁昊</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">3.0</span></td><td class="score-mid">8.0</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-2170174207192864970')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">西式快餐事业本部</span><span class="dept5-drill-tag">📊 已下钻六级</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 51人</span><span class="stat-chip avg-chip">均值 <strong>12.03</strong></span><span class="stat-chip full-chip">高分率 <strong>80.4%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-2170174207192864970-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-2170174207192864970"><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-4467763763415496572')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐品牌行销部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 17人</span><span class="meta-badge avg-badge">均值 <strong>11.93</strong></span></div>
+<span class="toggle-icon" id="syn-l6-4467763763415496572-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-4467763763415496572"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 方园</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 23</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 屠璐丹</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 王婷</td><td><span class="badge-green">✅ 20</span></td><td><span class="badge-green">✅ 44</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 郭晓菁</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 方丽堃</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 王轶婷</td><td><span class="badge-green">✅ 14</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 施晨怡</td><td><span class="badge-green">✅ 10</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 赵宏鑫</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 蒋冰倩</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 钟鹤翎</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 杨杏平</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 31</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 亚尔</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 22</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 张思敏</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 27</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">11.5</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 王丽婷</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">11.5</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 徐心怡</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">11.5</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 俞敏毓</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">9.5</td></tr>
+<tr><td class="rank-num">17</td><td class="name-cell">👤 刘扬</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-green">✅ 40</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">9.5</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-3467682184806628830')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐开发加盟拓展部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 7人</span><span class="meta-badge avg-badge">均值 <strong>11.8</strong></span></div>
+<span class="toggle-icon" id="syn-l6-3467682184806628830-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-3467682184806628830"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 潘明玥</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 26</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 王煜云</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 刘博宇</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 张伟</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 41</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 杨建涛</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 姬文林</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 李纯冬</td><td><span class="badge-red">❌ 0</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">3.0</span></td><td class="score-mid">8.0</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-4704997837154916817')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐本地生活运营部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 5人</span><span class="meta-badge avg-badge">均值 <strong>12.5</strong></span></div>
+<span class="toggle-icon" id="syn-l6-4704997837154916817-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-4704997837154916817"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 雷婷</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 22</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 郑建鑫</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 22</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 马颖涯</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 35</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 孙欢</td><td><span class="badge-green">✅ 12</span></td><td><span class="badge-green">✅ 35</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 张艳莉</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 35</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-5306878287131943504')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐用户运营部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 9人</span><span class="meta-badge avg-badge">均值 <strong>12.49</strong></span></div>
+<span class="toggle-icon" id="syn-l6-5306878287131943504-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-5306878287131943504"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 邰浩宇</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 郭振男</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 33</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 贾夕尧</td><td><span class="badge-green">✅ 12</span></td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 文宜南</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 和芳瑜</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 黄梦婷</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 姜星辰</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 35</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 陈靖贻</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 柳俊秀</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">11.5</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-4726597959744811615')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">西式快餐营运及训练部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 12人</span><span class="meta-badge avg-badge">均值 <strong>11.82</strong></span></div>
+<span class="toggle-icon" id="syn-l6-4726597959744811615-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-4726597959744811615"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 叶欣</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 26</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 王寅</td><td><span class="badge-green">✅ 11</span></td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 胡镇</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 23</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 候小云</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 24</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 李沫</td><td><span class="badge-green">✅ 16</span></td><td><span class="badge-green">✅ 35</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 李晓波</td><td><span class="badge-green">✅ 25</span></td><td><span class="badge-green">✅ 35</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 李江</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 21</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 谢春雷</td><td><span class="badge-green">✅ 16</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 庞科</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 范伟</td><td><span class="badge-green">✅ 18</span></td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 苏慧</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">8.5</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 李楠</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">8.5</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-7400408766544896720')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">计算错误</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 1人</span><span class="meta-badge avg-badge">均值 <strong>11.5</strong></span></div>
+<span class="toggle-icon" id="syn-l6-7400408766544896720-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-7400408766544896720"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 李德伟</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">11.5</td></tr></tbody></table></div>
+</div></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-5674461912076886515')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">研发中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 16人</span><span class="stat-chip avg-chip">均值 <strong>11.46</strong></span><span class="stat-chip full-chip">高分率 <strong>56.2%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-5674461912076886515-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-5674461912076886515"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 黄红卫</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 5</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 陈文</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 5</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 吴秋萍</td><td><span class="badge-green">✅ 12</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 陈己秀</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 吕韦辰</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 张普明</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 韩治刚</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 林桃</td><td><span class="badge-green">✅ 10</span></td><td><span class="badge-green">✅ 5</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 刘陈</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 陈丽</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">3.8</span></td><td class="score-mid">11.8</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 汪诗新</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">3.2</span></td><td class="score-mid">11.2</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 戚晓峰</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">3.0</span></td><td class="score-mid">11.0</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 郑宏谟</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">3.0</span></td><td class="score-mid">11.0</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 刘红莉</td><td><span class="badge-red">❌ 0</span></td><td><span class="badge-green">✅ 5</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">9.5</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 董浩志</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 5</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">9.5</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 田正良</td><td><span class="badge-red">❌ 0</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">2.0</span></td><td class="score-mid">7.0</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-1847521193421646811')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">中式快餐事业本部</span><span class="dept5-drill-tag">📊 已下钻六级</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 17人</span><span class="stat-chip avg-chip">均值 <strong>9.84</strong></span><span class="stat-chip full-chip">高分率 <strong>41.2%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-1847521193421646811-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-1847521193421646811"><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-6890947558379954465')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">中式快餐品牌及用户运营部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 7人</span><span class="meta-badge avg-badge">均值 <strong>9.83</strong></span></div>
+<span class="toggle-icon" id="syn-l6-6890947558379954465-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-6890947558379954465"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 王馨</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 黄雯薇</td><td><span class="badge-green">✅ 12</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 徐俊</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 康浩</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 诸逸婧</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">3.5</span></td><td class="score-zero">6.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 肖秋勇</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">3.5</span></td><td class="score-zero">6.5</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 张嘉懿</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">3.0</span></td><td class="score-zero">6.0</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-2921069234984740078')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">中式快餐开发加盟拓展部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 2人</span><span class="meta-badge avg-badge">均值 <strong>11.15</strong></span></div>
+<span class="toggle-icon" id="syn-l6-2921069234984740078-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-2921069234984740078"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 陈圣杰</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 李俊</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">9.5</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-3250868104680666551')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">中式快餐营运推进及训练部</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 6人</span><span class="meta-badge avg-badge">均值 <strong>9.3</strong></span></div>
+<span class="toggle-icon" id="syn-l6-3250868104680666551-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-3250868104680666551"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 范欢欢</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 刘勇</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.8</span></td><td class="score-mid">9.8</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 袁玉霞</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">9.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 付奇</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">8.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 王美琴</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">8.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 张昌荣</td><td><span class="badge-red">❌ 0</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">2.0</span></td><td class="score-mid">7.0</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-7400408766544896720')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">计算错误</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 1人</span><span class="meta-badge avg-badge">均值 <strong>7.9</strong></span></div>
+<span class="toggle-icon" id="syn-l6-7400408766544896720-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-7400408766544896720"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 罗金林</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">2.9</span></td><td class="score-mid">7.9</td></tr></tbody></table></div>
+</div><div class="sub-dept-card">
+<div class="sub-dept-header" onclick="toggleSection('syn-l6-excl-1847521193421646811')">
+<span class="sub-dept-icon">📁</span><span class="sub-dept-name">其他（无六级部门）</span>
+<div class="sub-dept-meta"><span class="meta-badge">👥 1人</span></div>
+<span class="toggle-icon" id="syn-l6-excl-1847521193421646811-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l6-excl-1847521193421646811"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 庞相勇</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr></tbody></table></div>
+</div></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-7299263904335745332')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">业务洞察分析部</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 5人</span><span class="stat-chip avg-chip">均值 <strong>11.7</strong></span><span class="stat-chip full-chip">高分率 <strong>80.0%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-7299263904335745332-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-7299263904335745332"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 朱俊杰</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 20</span></td><td><span class="match-score">5.0</span></td><td class="score-full">13.0</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 高晓妍</td><td><span class="badge-green">✅ 10</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">5.0</span></td><td class="score-full">13.0</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 丁菲</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 邱雅馨</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 陈彦溪</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">7.5</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-905582613404988010')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">总经办</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 2人</span><span class="stat-chip avg-chip">均值 <strong>10.5</strong></span><span class="stat-chip full-chip">高分率 <strong>50.0%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-905582613404988010-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-905582613404988010"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 钱骏</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 姚磊</td><td><span class="badge-red">❌ 0</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">8.5</td></tr></tbody></table></div>
+</div></div>
+</div>
+<div class="dept-level4-card">
+<div class="dept4-header" onclick="toggleSection('syn-l4-6004129846622937443')">
+<div class="dept4-title"><span class="dept4-icon">🏛️</span><h3>大TQ总部</h3></div>
+<div class="dept4-summary">
+<div class="summary-item"><span class="s-label">👥 总人数</span><span class="s-val">65</span></div>
+<div class="summary-item"><span class="s-label">📊 部门均值</span><span class="s-val highlight">11.26</span></div>
+<div class="summary-item"><span class="s-label">🏆 高分(≥12)人数</span><span class="s-val">44</span></div>
+<div class="summary-item"><span class="s-label">📈 均值达标率</span><span class="s-val">86.6%</span></div>
+</div>
+<span class="toggle-icon dept4-toggle" id="syn-l4-6004129846622937443-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l4-6004129846622937443"><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-2115056398757874600')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ人力发展中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 16人</span><span class="stat-chip avg-chip">均值 <strong>10.95</strong></span><span class="stat-chip full-chip">高分率 <strong>50.0%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-2115056398757874600-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-2115056398757874600"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 王影</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 杨颖蓉</td><td><span class="badge-green">✅ 17</span></td><td><span class="badge-green">✅ 21</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 尤优</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 张神杰</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 21</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 莫启荣</td><td><span class="badge-green">✅ 17</span></td><td><span class="badge-green">✅ 30</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 戴佳炜</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 10</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 张林波</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 孙嘉仪</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 经珊</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">3.8</span></td><td class="score-mid">11.8</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 黄健</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">11.5</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 张墨琦</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">3.0</span></td><td class="score-mid">11.0</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 金世杰</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">2.5</span></td><td class="score-mid">10.5</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 刘颖</td><td><span class="badge-red">❌ 0</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">2.8</span></td><td class="score-mid">7.8</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 高敏慈</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-red">❌ 4</span></td><td><span class="match-score">4.7</span></td><td class="score-mid">7.7</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 陆磊</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">7.5</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 王洁</td><td><span class="badge-red">❌ 0</span></td><td><span class="badge-green">✅ 17</span></td><td><span class="match-score">2.5</span></td><td class="score-mid">7.5</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-5056100354799762424')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ财务中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 24人</span><span class="stat-chip avg-chip">均值 <strong>10.85</strong></span><span class="stat-chip full-chip">高分率 <strong>66.7%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-5056100354799762424-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-5056100354799762424"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 朱婉婷</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">5.0</span></td><td class="score-full">13.0</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 聂艳萍</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 张佳燕</td><td><span class="badge-green">✅ 11</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 邢艳辉</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 杨良奎</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 26</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 刘洋</td><td><span class="badge-green">✅ 13</span></td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 刘燕傧</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 11</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 高程</td><td><span class="badge-green">✅ 10</span></td><td><span class="badge-green">✅ 19</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 陈皖</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 郁文佳</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 王海花</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 高宇</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 陈琳丽</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 姜妍</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 付宇佳</td><td><span class="badge-green">✅ 10</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">16</td><td class="name-cell">👤 易超</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">17</td><td class="name-cell">👤 卞枭</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">11.5</td></tr>
+<tr><td class="rank-num">18</td><td class="name-cell">👤 施汉杰</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">2.5</span></td><td class="score-mid">10.5</td></tr>
+<tr><td class="rank-num">19</td><td class="name-cell">👤 李龙</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">2.5</span></td><td class="score-mid">10.5</td></tr>
+<tr><td class="rank-num">20</td><td class="name-cell">👤 曹宜婧</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 25</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">9.5</td></tr>
+<tr><td class="rank-num">21</td><td class="name-cell">👤 潘翔</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">2.5</span></td><td class="score-mid">7.5</td></tr>
+<tr><td class="rank-num">22</td><td class="name-cell">👤 单海燕</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-red">❌ 4</span></td><td><span class="match-score">2.5</span></td><td class="score-zero">5.5</td></tr>
+<tr><td class="rank-num">23</td><td class="name-cell">👤 郁欢</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-red">❌ 1</span></td><td><span class="match-score">3.5</span></td><td class="score-zero">3.5</td></tr>
+<tr><td class="rank-num">24</td><td class="name-cell">👤 程文静</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-red">❌ 4</span></td><td><span class="match-score">2.5</span></td><td class="score-zero">2.5</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-2972189019545048086')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ食品安全中心</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 15人</span><span class="stat-chip avg-chip">均值 <strong>11.71</strong></span><span class="stat-chip full-chip">高分率 <strong>80.0%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-2972189019545048086-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-2972189019545048086"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 杨欣</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 侯万里</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 董路路</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 18</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 沙云涛</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 16</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 王晴</td><td><span class="badge-green">✅ 8</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">6</td><td class="name-cell">👤 卞海燕</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 15</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">7</td><td class="name-cell">👤 王昌宁</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">8</td><td class="name-cell">👤 郭震</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">9</td><td class="name-cell">👤 郭建伟</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">10</td><td class="name-cell">👤 顾军</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">11</td><td class="name-cell">👤 邓云</td><td><span class="badge-green">✅ 5</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">12</td><td class="name-cell">👤 江居杰</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr>
+<tr><td class="rank-num">13</td><td class="name-cell">👤 仲菲</td><td><span class="badge-red">❌ 2</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">9.5</td></tr>
+<tr><td class="rank-num">14</td><td class="name-cell">👤 龚旭</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-green">✅ 7</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">8.5</td></tr>
+<tr><td class="rank-num">15</td><td class="name-cell">👤 花艳</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-red">❌ 3</span></td><td><span class="match-score">4.5</span></td><td class="score-mid">7.5</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-8808170625959218420')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ执行长办公室</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 5人</span><span class="stat-chip avg-chip">均值 <strong>12.36</strong></span><span class="stat-chip full-chip">高分率 <strong>80.0%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-8808170625959218420-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-8808170625959218420"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 刘星辰</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 梁美玲</td><td><span class="badge-green">✅ 9</span></td><td><span class="badge-green">✅ 14</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 高耀</td><td><span class="badge-green">✅ 7</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 崔凯军</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 8</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">5</td><td class="name-cell">👤 熊淑梅</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 9</span></td><td><span class="match-score">3.5</span></td><td class="score-mid">11.5</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-9078444222934704979')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ法务及合规部</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 4人</span><span class="stat-chip avg-chip">均值 <strong>11.7</strong></span><span class="stat-chip full-chip">高分率 <strong>75.0%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-9078444222934704979-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-9078444222934704979"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 赵丹</td><td><span class="badge-green">✅ 6</span></td><td><span class="badge-green">✅ 5</span></td><td><span class="match-score">4.8</span></td><td class="score-full">12.8</td></tr>
+<tr><td class="rank-num">2</td><td class="name-cell">👤 庄映虹</td><td><span class="badge-green">✅ 3</span></td><td><span class="badge-green">✅ 5</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">3</td><td class="name-cell">👤 丁成刚</td><td><span class="badge-green">✅ 10</span></td><td><span class="badge-green">✅ 12</span></td><td><span class="match-score">4.5</span></td><td class="score-full">12.5</td></tr>
+<tr><td class="rank-num">4</td><td class="name-cell">👤 顾凯莉</td><td><span class="badge-red">❌ 1</span></td><td><span class="badge-green">✅ 6</span></td><td><span class="match-score">4.0</span></td><td class="score-mid">9.0</td></tr></tbody></table></div>
+</div><div class="dept-level5">
+<div class="dept5-header" onclick="toggleSection('syn-l5-447044493306944346')">
+<div class="dept5-title"><span class="dept5-icon">🏢</span><span class="dept5-name">大TQ执董办公室</span></div>
+<div class="dept5-stats"><span class="stat-chip">👥 1人</span><span class="stat-chip avg-chip">均值 <strong>12.0</strong></span><span class="stat-chip full-chip">高分率 <strong>100.0%</strong></span></div>
+<span class="toggle-icon" id="syn-l5-447044493306944346-icon">▼</span>
+</div>
+<div class="collapse-content" id="syn-l5-447044493306944346"><table class="data-table"><thead><tr><th>#</th><th>姓名</th><th>我的文档创建数量</th><th>与我相关文档数量</th><th>文档匹配性得分</th><th>月度考核评分</th></tr></thead><tbody><tr><td class="rank-num">1</td><td class="name-cell">👤 师晓磊</td><td><span class="badge-green">✅ 4</span></td><td><span class="badge-green">✅ 13</span></td><td><span class="match-score">4.0</span></td><td class="score-full">12.0</td></tr></tbody></table></div>
+</div></div>
+</div>
+</div>
+
+<!-- ============ 四、排名 ============ -->
+<div class="section" id="ranking">
+  <div class="section-title">🏆 排名与总结</div>
+  
+  <div class="two-col">
+    <!-- AI TOP10 -->
+    <div class="card">
+      <div class="card-title">🤖 AI工具考核 · 个人TOP10</div>
+      <table class="rank-table">
+        <thead><tr><th>#</th><th>姓名</th><th>四级部门</th><th>五级部门</th><th>分数</th></tr></thead>
+        <tbody><tr><td>🥇</td><td>👤 吴丹</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">7</td></tr>
+<tr><td>🥈</td><td>👤 张神杰</td><td>大TQ总部</td><td>大TQ人力发展中心</td><td class="score-full">7</td></tr>
+<tr><td>🥉</td><td>👤 莫启荣</td><td>大TQ总部</td><td>大TQ人力发展中心</td><td class="score-full">7</td></tr>
+<tr><td>4</td><td>👤 苏慧</td><td>餐饮群总部</td><td>西式快餐事业本部</td><td class="score-full">7</td></tr>
+<tr><td>5</td><td>👤 丁昊</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">7</td></tr>
+<tr><td>6</td><td>👤 胡镇</td><td>餐饮群总部</td><td>西式快餐事业本部</td><td class="score-full">7</td></tr>
+<tr><td>7</td><td>👤 王悦</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">7</td></tr>
+<tr><td>8</td><td>👤 杨光</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">7</td></tr>
+<tr><td>9</td><td>👤 姚智捷</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">7</td></tr>
+<tr><td>10</td><td>👤 王寅</td><td>餐饮群总部</td><td>西式快餐事业本部</td><td class="score-full">7</td></tr>
+</tbody>
+      </table>
+    </div>
+    <!-- 协同TOP10 -->
+    <div class="card">
+      <div class="card-title">📄 协同工具考核 · 个人TOP10</div>
+      <table class="rank-table">
+        <thead><tr><th>#</th><th>姓名</th><th>四级部门</th><th>五级部门</th><th>分数</th></tr></thead>
+        <tbody><tr><td>🥇</td><td>👤 朱婉婷</td><td>大TQ总部</td><td>大TQ财务中心</td><td class="score-full">13.0</td></tr>
+<tr><td>🥈</td><td>👤 朱俊杰</td><td>餐饮群总部</td><td>业务洞察分析部</td><td class="score-full">13.0</td></tr>
+<tr><td>🥉</td><td>👤 高晓妍</td><td>餐饮群总部</td><td>业务洞察分析部</td><td class="score-full">13.0</td></tr>
+<tr><td>4</td><td>👤 吴丹</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">12.8</td></tr>
+<tr><td>5</td><td>👤 姚智捷</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">12.8</td></tr>
+<tr><td>6</td><td>👤 杨光</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">12.8</td></tr>
+<tr><td>7</td><td>👤 叶欣</td><td>餐饮群总部</td><td>西式快餐事业本部</td><td class="score-full">12.8</td></tr>
+<tr><td>8</td><td>👤 张凯芸</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">12.8</td></tr>
+<tr><td>9</td><td>👤 潘明玥</td><td>餐饮群总部</td><td>西式快餐事业本部</td><td class="score-full">12.8</td></tr>
+<tr><td>10</td><td>👤 顾天宇</td><td>餐饮群总部</td><td>数智科技中心</td><td class="score-full">12.8</td></tr>
+</tbody>
+      </table>
+    </div>
+  </div>
+  
+  <div class="two-col" style="margin-top:20px">
+    <!-- AI部门排名 -->
+    <div class="card">
+      <div class="card-title">🤖 AI工具考核 · 五级部门排名</div>
+      <table class="rank-table">
+        <thead><tr><th>#</th><th>部门</th><th>均值进度</th><th>均值</th><th>人数</th></tr></thead>
+        <tbody><tr><td class="rank-medal">🥇</td><td><span class="l4-tag">餐饮群总部</span> 业务洞察分析部</td><td><div class="progress-bar"><div class="progress-fill" style="width:100.0%;background:#22c55e"></div></div></td><td class="avg-num">7.0</td><td>5人</td></tr>
+<tr><td class="rank-medal">🥈</td><td><span class="l4-tag">大TQ总部</span> 大TQ人力发展中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:100.0%;background:#22c55e"></div></div></td><td class="avg-num">7.0</td><td>16人</td></tr>
+<tr><td class="rank-medal">🥉</td><td><span class="l4-tag">大TQ总部</span> 大TQ执行长办公室</td><td><div class="progress-bar"><div class="progress-fill" style="width:100.0%;background:#22c55e"></div></div></td><td class="avg-num">7.0</td><td>5人</td></tr>
+<tr><td class="rank-medal">4</td><td><span class="l4-tag">大TQ总部</span> 大TQ执董办公室</td><td><div class="progress-bar"><div class="progress-fill" style="width:100.0%;background:#22c55e"></div></div></td><td class="avg-num">7.0</td><td>1人</td></tr>
+<tr><td class="rank-medal">5</td><td><span class="l4-tag">餐饮群总部</span> 中式快餐事业本部</td><td><div class="progress-bar"><div class="progress-fill" style="width:97.4%;background:#22c55e"></div></div></td><td class="avg-num">6.82</td><td>17人</td></tr>
+<tr><td class="rank-medal">6</td><td><span class="l4-tag">餐饮群总部</span> 数智科技中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:96.6%;background:#22c55e"></div></div></td><td class="avg-num">6.76</td><td>29人</td></tr>
+<tr><td class="rank-medal">7</td><td><span class="l4-tag">餐饮群总部</span> 西式快餐事业本部</td><td><div class="progress-bar"><div class="progress-fill" style="width:94.4%;background:#22c55e"></div></div></td><td class="avg-num">6.61</td><td>51人</td></tr>
+<tr><td class="rank-medal">8</td><td><span class="l4-tag">餐饮群总部</span> 研发中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:93.3%;background:#22c55e"></div></div></td><td class="avg-num">6.53</td><td>15人</td></tr>
+<tr><td class="rank-medal">9</td><td><span class="l4-tag">大TQ总部</span> 大TQ食品安全中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:93.3%;background:#22c55e"></div></div></td><td class="avg-num">6.53</td><td>15人</td></tr>
+<tr><td class="rank-medal">10</td><td><span class="l4-tag">餐饮群总部</span> 总经办</td><td><div class="progress-bar"><div class="progress-fill" style="width:78.6%;background:#f59e0b"></div></div></td><td class="avg-num">5.5</td><td>2人</td></tr>
+<tr><td class="rank-medal">11</td><td><span class="l4-tag">大TQ总部</span> 大TQ财务中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:73.1%;background:#f59e0b"></div></div></td><td class="avg-num">5.12</td><td>24人</td></tr>
+<tr><td class="rank-medal">12</td><td><span class="l4-tag">大TQ总部</span> 大TQ法务及合规部</td><td><div class="progress-bar"><div class="progress-fill" style="width:64.3%;background:#ef4444"></div></div></td><td class="avg-num">4.5</td><td>4人</td></tr></tbody>
+      </table>
+    </div>
+    <!-- 协同部门排名 -->
+    <div class="card">
+      <div class="card-title">📄 协同工具考核 · 五级部门排名</div>
+      <table class="rank-table">
+        <thead><tr><th>#</th><th>部门</th><th>均值进度</th><th>均值</th><th>人数</th></tr></thead>
+        <tbody><tr><td class="rank-medal">🥇</td><td><span class="l4-tag">大TQ总部</span> 大TQ执行长办公室</td><td><div class="progress-bar"><div class="progress-fill" style="width:95.1%;background:#22c55e"></div></div></td><td class="avg-num">12.36</td><td>5人</td></tr>
+<tr><td class="rank-medal">🥈</td><td><span class="l4-tag">餐饮群总部</span> 数智科技中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:94.0%;background:#22c55e"></div></div></td><td class="avg-num">12.22</td><td>30人</td></tr>
+<tr><td class="rank-medal">🥉</td><td><span class="l4-tag">餐饮群总部</span> 西式快餐事业本部</td><td><div class="progress-bar"><div class="progress-fill" style="width:92.5%;background:#22c55e"></div></div></td><td class="avg-num">12.03</td><td>51人</td></tr>
+<tr><td class="rank-medal">4</td><td><span class="l4-tag">大TQ总部</span> 大TQ执董办公室</td><td><div class="progress-bar"><div class="progress-fill" style="width:92.3%;background:#22c55e"></div></div></td><td class="avg-num">12.0</td><td>1人</td></tr>
+<tr><td class="rank-medal">5</td><td><span class="l4-tag">大TQ总部</span> 大TQ食品安全中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:90.1%;background:#f59e0b"></div></div></td><td class="avg-num">11.71</td><td>15人</td></tr>
+<tr><td class="rank-medal">6</td><td><span class="l4-tag">餐饮群总部</span> 业务洞察分析部</td><td><div class="progress-bar"><div class="progress-fill" style="width:90.0%;background:#f59e0b"></div></div></td><td class="avg-num">11.7</td><td>5人</td></tr>
+<tr><td class="rank-medal">7</td><td><span class="l4-tag">大TQ总部</span> 大TQ法务及合规部</td><td><div class="progress-bar"><div class="progress-fill" style="width:90.0%;background:#f59e0b"></div></div></td><td class="avg-num">11.7</td><td>4人</td></tr>
+<tr><td class="rank-medal">8</td><td><span class="l4-tag">餐饮群总部</span> 研发中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:88.2%;background:#f59e0b"></div></div></td><td class="avg-num">11.46</td><td>16人</td></tr>
+<tr><td class="rank-medal">9</td><td><span class="l4-tag">大TQ总部</span> 大TQ人力发展中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:84.2%;background:#f59e0b"></div></div></td><td class="avg-num">10.95</td><td>16人</td></tr>
+<tr><td class="rank-medal">10</td><td><span class="l4-tag">大TQ总部</span> 大TQ财务中心</td><td><div class="progress-bar"><div class="progress-fill" style="width:83.5%;background:#f59e0b"></div></div></td><td class="avg-num">10.85</td><td>24人</td></tr>
+<tr><td class="rank-medal">11</td><td><span class="l4-tag">餐饮群总部</span> 总经办</td><td><div class="progress-bar"><div class="progress-fill" style="width:80.8%;background:#f59e0b"></div></div></td><td class="avg-num">10.5</td><td>2人</td></tr>
+<tr><td class="rank-medal">12</td><td><span class="l4-tag">餐饮群总部</span> 中式快餐事业本部</td><td><div class="progress-bar"><div class="progress-fill" style="width:75.7%;background:#f59e0b"></div></div></td><td class="avg-num">9.84</td><td>17人</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 五、洞察与建议 ============ -->
+<div class="section" id="insights">
+  <div class="section-title">💡 核心洞察与改善建议</div>
+  
+  <div class="insight-grid">
+    <div class="insight-card success">
+      <h4>✅ 整体表现良好，AI工具渗透率高</h4>
+      <p>全员AI工具考核均值 <strong>6.45</strong> 分（满分7分），满分率高达 <strong>90.2%</strong>（166人），说明总部员工对AI工具的认知与使用已达较高水平。AI对话数量达标率 <strong>90.2%</strong>，数智化工作习惯已初步建立。</p>
+    </div>
+    
+    <div class="insight-card warning">
+      <h4>⚠️ AI零分人员需重点跟进</h4>
+      <p>共有 <strong>12</strong> 名员工AI考核得0分，主要集中在：大TQ财务中心(6人), 西式快餐事业本部(2人), 大TQ法务及合规部(1人), 大TQ食品安全中心(1人), 数智科技中心(1人), 研发中心(1人)。建议对这部分员工开展专项AI工具培训，结合岗位场景提供针对性使用指导，并在下月考核前进行跟踪辅导。</p>
+    </div>
+    
+    <div class="insight-card">
+      <h4>📊 大TQ总部AI使用有提升空间</h4>
+      <p>餐饮群总部AI考核均值 <strong>6.66</strong> 高于大TQ总部 <strong>6.05</strong>，差距约 <strong>0.61</strong> 分。大TQ财务中心（均值5.12）和大TQ法务及合规部（均值4.5）是重点提升对象，建议结合财务、法务专业场景推广AI应用案例。</p>
+    </div>
+    
+    <div class="insight-card success">
+      <h4>📄 协同文档工具使用积极</h4>
+      <p>协同工具考核均值 <strong>11.52</strong> 分（满分13分），高分（≥12分）人数达 <strong>133</strong> 人，占比 <strong>72.3%</strong>。文档创建达标率 <strong>86.4%</strong>，与我相关文档达标率 <strong>95.7%</strong>，协同氛围良好。</p>
+    </div>
+    
+    <div class="insight-card warning">
+      <h4>⚠️ 中式快餐事业本部协同得分偏低</h4>
+      <p>中式快餐事业本部协同工具考核均值仅 <strong>11.65</strong> 左右区间内垫底（均值9.84），建议调研该部门文档使用的障碍点，是否存在文档创建意愿不足或工具使用不熟悉的情况，制定专项提升计划。</p>
+    </div>
+    
+    <div class="insight-card purple">
+      <h4>🚀 下月改善建议</h4>
+      <ul>
+        <li>对AI零分及低分员工开展1对1辅导</li>
+        <li>在大TQ财务/法务部门推广AI典型案例</li>
+        <li>中式快餐本部加强协同文档创建激励机制</li>
+        <li>建立AI+协同工具双优秀员工表彰机制</li>
+        <li>下月考核前开展AI使用技巧分享会</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<div class="footer">
+  <p>📊 数科-人本 · 数智化协同及AI应用考评分析报告 · 总部 · 2025年1月</p>
+  <p style="margin-top:4px">数据来源：《数智化协同及AI应用考评表-总部-1月》 · 生成时间：2025年3月</p>
+</div>
+
+<script>
+// 折叠/展开
+function toggleSection(id) {
+  const el = document.getElementById(id);
+  const icon = document.getElementById(id + '-icon');
+  if (!el) return;
+  el.classList.toggle('open');
+  if (icon) icon.classList.toggle('rotated');
+}
+
+function expandAll(prefix) {
+  document.querySelectorAll('.collapse-content').forEach(el => {
+    if (!prefix || el.id.startsWith(prefix) || el.closest('#' + prefix + '-section')) {
+      el.classList.add('open');
+    }
+  });
+  document.querySelectorAll('.toggle-icon').forEach(el => el.classList.add('rotated'));
+}
+
+function collapseAll(prefix) {
+  document.querySelectorAll('.collapse-content').forEach(el => {
+    el.classList.remove('open');
+  });
+  document.querySelectorAll('.toggle-icon').forEach(el => el.classList.remove('rotated'));
+}
+
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'});
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// AI部门均值图表
+const aiCtx = document.getElementById('aiDeptChart').getContext('2d');
+new Chart(aiCtx, {
+  type: 'bar',
+  data: {
+    labels: ["业务洞察分析部", "大TQ人力发展中心", "大TQ执行长办公室", "大TQ执董办公室", "中式快餐事业本部", "数智科技中心", "西式快餐事业本部", "研发中心", "大TQ食品安全中心", "总经办", "大TQ财务中心", "大TQ法务及合规部"],
+    datasets: [{
+      label: 'AI月度绩效考核均值',
+      data: [7.0, 7.0, 7.0, 7.0, 6.82, 6.76, 6.61, 6.53, 6.53, 5.5, 5.12, 4.5],
+      backgroundColor: ["#3b82f6", "#8b5cf6", "#8b5cf6", "#8b5cf6", "#3b82f6", "#3b82f6", "#3b82f6", "#3b82f6", "#8b5cf6", "#3b82f6", "#8b5cf6", "#8b5cf6"],
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` 均值: ${ctx.raw} 分`
+        }
+      }
+    },
+    scales: {
+      x: {
+        min: 0, max: 7,
+        grid: { color: '#f0f4ff' },
+        ticks: { font: { size: 11 } },
+        title: { display: true, text: '均值（满分7分）', font: { size: 11 } }
+      },
+      y: { ticks: { font: { size: 11 } } }
+    }
+  }
+});
+
+// 协同部门均值图表
+const synCtx = document.getElementById('synDeptChart').getContext('2d');
+new Chart(synCtx, {
+  type: 'bar',
+  data: {
+    labels: ["大TQ执行长办公室", "数智科技中心", "西式快餐事业本部", "大TQ执董办公室", "大TQ食品安全中心", "业务洞察分析部", "大TQ法务及合规部", "研发中心", "大TQ人力发展中心", "大TQ财务中心", "总经办", "中式快餐事业本部"],
+    datasets: [{
+      label: '协同月度绩效考核均值',
+      data: [12.36, 12.22, 12.03, 12.0, 11.71, 11.7, 11.7, 11.46, 10.95, 10.85, 10.5, 9.84],
+      backgroundColor: ["#a855f7", "#0ea5e9", "#0ea5e9", "#a855f7", "#a855f7", "#0ea5e9", "#a855f7", "#0ea5e9", "#a855f7", "#a855f7", "#0ea5e9", "#0ea5e9"],
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` 均值: ${ctx.raw} 分`
+        }
+      }
+    },
+    scales: {
+      x: {
+        min: 0, max: 13,
+        grid: { color: '#f0f4ff' },
+        ticks: { font: { size: 11 } },
+        title: { display: true, text: '均值（满分13分）', font: { size: 11 } }
+      },
+      y: { ticks: { font: { size: 11 } } }
+    }
+  }
+});
+</script>
+</body>
+</html>
